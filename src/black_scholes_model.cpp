@@ -1,0 +1,31 @@
+#include "../include/pricers/black_scholes_model.h"
+#include "../include/market/market_data.h"
+#include <cmath>
+
+double pricing_engine::models::BlackScholesModel::normal_cdf(double d) const {
+  return 0.5 * std::erfc(-d / std::sqrt(2.0));
+}
+
+double pricing_engine::models::BlackScholesModel::calculate_d1(double underlying_price, double strike, double time_to_expiration, double volatility, double risk_free_rate) const {
+  double numerator = std::log(underlying_price / strike) + time_to_expiration * (risk_free_rate + 0.5 * volatility * volatility);
+  double denominator = volatility * std::sqrt(time_to_expiration);
+  return numerator / denominator;
+}
+
+double pricing_engine::models::BlackScholesModel::calculate_d2(double d1, double volatility, double time_to_expiration) const {
+  return d1 - volatility * std::sqrt(time_to_expiration);
+}
+
+double pricing_engine::models::BlackScholesModel::price(const pricing_engine::instruments::Option& option, const pricing_engine::market_data::MarketData& market_data) const {
+  double d1 = calculate_d1(market_data.spot_price, option.strike, option.time_to_expiration, market_data.volatility, market_data.rate);
+  double d2 = calculate_d2(d1, market_data.volatility, option.time_to_expiration);
+
+  double price;
+  if (option.type == pricing_engine::instruments::option_type::call) {
+    price = market_data.spot_price * normal_cdf(d1) - option.strike * std::exp(-market_data.rate * option.time_to_expiration) * normal_cdf(d2);
+  } else {
+    price = option.strike * std::exp(-market_data.rate * option.time_to_expiration) * normal_cdf(-d2) - market_data.spot_price * normal_cdf(-d1);
+  }
+  return price;
+}
+
