@@ -17,14 +17,14 @@ double pricing_engine::models::BlackScholesModel::calculate_d2(double d1, double
 }
 
 double pricing_engine::models::BlackScholesModel::price(const pricing_engine::instruments::Option& option, const pricing_engine::market_data::MarketData& market_data) const {
-  double d1 = calculate_d1(market_data.spot_price, option.strike, option.time_to_expiration, market_data.volatility, market_data.rate);
-  double d2 = calculate_d2(d1, market_data.volatility, option.time_to_expiration);
+  double d1 = calculate_d1(market_data.get_spot_price(), option.get_strike(), option.get_time_to_expiration(), market_data.get_volatility(), market_data.get_interest_rate());
+  double d2 = calculate_d2(d1, market_data.get_volatility(), option.get_time_to_expiration());
 
   double price;
-  if (option.type == pricing_engine::instruments::option_type::call) {
-    price = market_data.spot_price * normal_cdf(d1) - option.strike * std::exp(-market_data.rate * option.time_to_expiration) * normal_cdf(d2);
+  if (option.get_type() == pricing_engine::instruments::option_type::call) {
+    price = market_data.get_spot_price() * normal_cdf(d1) - option.get_strike() * std::exp(-market_data.get_interest_rate() * option.get_time_to_expiration()) * normal_cdf(d2);
   } else {
-    price = option.strike * std::exp(-market_data.rate * option.time_to_expiration) * normal_cdf(-d2) - market_data.spot_price * normal_cdf(-d1);
+    price = option.get_strike() * std::exp(-market_data.get_interest_rate() * option.get_time_to_expiration()) * normal_cdf(-d2) - market_data.get_spot_price() * normal_cdf(-d1);
   }
   return price;
 }
