@@ -4,8 +4,8 @@
 pricing_engine::market_data::MarketData::MarketData(double spot_price, double interest_rate, double volatility) {
     if (spot_price < 0)
       throw std::invalid_argument("Spot price must be positive.");
-    if (interest_rate < 0)
-      throw std::invalid_argument("Interest rate cannot be negative.");
+    if (interest_rate < 0 || interest_rate > 1)
+      throw std::invalid_argument("Interest rate must be between 0 and 1.");
     if (volatility < 0)
       throw std::invalid_argument("Volatility cannot be negative.");
 
