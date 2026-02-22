@@ -13,6 +13,11 @@ int main()
   pricing_engine::models::BlackScholesModel bsm_engine;
   double bsm_price = bsm_engine.price(option, market_data);
   cout << "Option price: " << bsm_price << endl;
+  cout << "Option delta: " << bsm_engine.delta(option, market_data) << endl;
+  cout << "Option gamma: " << bsm_engine.gamma(option, market_data) << endl;
+  cout << "Option vega: " << bsm_engine.vega(option, market_data) << endl;
+  cout << "Option theta: " << bsm_engine.theta(option, market_data) << endl;
+  cout << "Option rho: " << bsm_engine.rho(option, market_data) << endl;
   
   return 0;
 }
