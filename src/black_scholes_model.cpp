@@ -1,4 +1,4 @@
-#include "../include/pricers/black_scholes_model.h"
+#include "../include/models/black_scholes_model.h"
 #include "../include/market/market_data.h"
 #include <cmath>
 

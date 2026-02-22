@@ -1,5 +1,5 @@
 #include <iostream>
-#include "./include/pricers/black_scholes_model.h"
+#include "./include/models/black_scholes_model.h"
 #include "./include/instruments/option.h"
 #include "./include/market/market_data.h"
 using namespace std;
