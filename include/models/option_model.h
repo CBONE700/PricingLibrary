@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../instruments/option.h"
 #include "../market/market_data.h"
 

@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include <typeinfo>
 
-pricing_engine::instruments::Option::Option(double strike, double time_to_expiration, option_type type) {
+pricing_engine::instruments::Option::Option(double strike, double time_to_expiration, option_type type, option_style style) {
   if (strike < 0)
     throw std::invalid_argument("Strike price must be positive.");
   if (time_to_expiration < 0)

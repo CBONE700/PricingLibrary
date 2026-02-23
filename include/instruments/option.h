@@ -2,21 +2,24 @@
 
 namespace pricing_engine::instruments {
   enum class option_type {call, put};
+  enum class option_style {european, american};
 
   class Option {
     double strike;
     double time_to_expiration;
     option_type type;
+    option_style style;
 
   public:
-    explicit Option(double strike, double time_to_expiration, option_type type);
+    explicit Option(double strike, double time_to_expiration, option_type type, option_style style = option_style::european);
 
     double get_strike() const { return strike; }
     double get_time_to_expiration() const { return time_to_expiration; }
     option_type get_type() const { return type; }
-
+    option_style get_style() const { return style; }
     void set_strike(double new_strike) { strike = new_strike; }
     void set_time_to_expiration(double new_time_to_expiration) { time_to_expiration = new_time_to_expiration; }
     void set_type(option_type new_type) { type = new_type; }
+    void set_style(option_style new_style) { style = new_style; }
   };
 }
