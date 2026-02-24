@@ -1,10 +1,12 @@
 #include "../include/models/binomial_model.h"
 #include <cmath>
 #include <vector>
+#include <stdexcept>
 
-pricing_engine::models::BinomialModel::BinomialModel(int steps) : steps(steps) {
+pricing_engine::models::BinomialModel::BinomialModel(int steps) {
   if (steps <= 0)
     throw std::invalid_argument("Number of steps must be positive.");
+  this->steps = steps;
 }
 
 double pricing_engine::models::BinomialModel::price(const pricing_engine::instruments::Option& option, const market_data::MarketData& market_data) const {
