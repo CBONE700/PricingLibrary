@@ -22,7 +22,7 @@ double pricing_engine::models::OptionModel::delta(const instruments::Option& opt
 
 double pricing_engine::models::OptionModel::gamma(const instruments::Option& option, const market_data::MarketData& market_data) const {
   double spot = market_data.get_spot_price();
-  double bump = std::max(1e-6, spot * 1e-5);
+  double bump = std::max(1e-3, spot * 1e-2);
 
   market_data::MarketData upward_market_data = market_data;
   market_data::MarketData downward_market_data = market_data;

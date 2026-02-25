@@ -7,7 +7,6 @@ namespace pricing_engine::instruments {
   class Option {
     double strike;
     double time_to_expiration;
-    double price;
     option_type type;
     option_style style;
 
@@ -16,13 +15,11 @@ namespace pricing_engine::instruments {
 
     double get_strike() const { return strike; }
     double get_time_to_expiration() const { return time_to_expiration; }
-    double get_price() const { return price; }
     option_type get_type() const { return type; }
     option_style get_style() const { return style; }
     void set_strike(double new_strike) { strike = new_strike; }
     void set_time_to_expiration(double new_time_to_expiration) { time_to_expiration = new_time_to_expiration; }
     void set_type(option_type new_type) { type = new_type; }
     void set_style(option_style new_style) { style = new_style; }
-    void set_price(double new_price) { price = new_price; }
   };
 }

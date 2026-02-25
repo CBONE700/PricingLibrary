@@ -1,13 +1,15 @@
 #include "../include/models/black_scholes_model.h"
 #include "../include/market/market_data.h"
 #include <cmath>
+#include <numbers>
+#include <stdexcept>
 
 double pricing_engine::models::BlackScholesModel::normal_cdf(double d) const {
   return 0.5 * std::erfc(-d / std::sqrt(2.0));
 }
 
 double pricing_engine::models::BlackScholesModel::normal_pdf(double d) const {
-  return (1.0 / (double)pow(2 * M_PI, 0.5)) * std::exp(-0.5 * d * d);
+  return (1.0 / (double)pow(2 * std::numbers::pi, 0.5)) * std::exp(-0.5 * d * d);
 }
 
 double pricing_engine::models::BlackScholesModel::calculate_d1(double underlying_price, double strike, double time_to_expiration, double volatility, double risk_free_rate) const {
@@ -21,6 +23,10 @@ double pricing_engine::models::BlackScholesModel::calculate_d2(double d1, double
 }
 
 double pricing_engine::models::BlackScholesModel::price(const pricing_engine::instruments::Option& option, const pricing_engine::market_data::MarketData& market_data) const {
+  if (option.get_style() != pricing_engine::instruments::option_style::european) {
+    throw std::invalid_argument("Black-Scholes model only supports European options.");
+  }
+
   double d1 = calculate_d1(market_data.get_spot_price(), option.get_strike(), option.get_time_to_expiration(), market_data.get_volatility(), market_data.get_interest_rate());
   double d2 = calculate_d2(d1, market_data.get_volatility(), option.get_time_to_expiration());
 
@@ -34,6 +40,9 @@ double pricing_engine::models::BlackScholesModel::price(const pricing_engine::in
 }
 
 double pricing_engine::models::BlackScholesModel::delta(const instruments::Option& option, const market_data::MarketData& market_data) const {
+  if (option.get_style() != pricing_engine::instruments::option_style::european) {
+    throw std::invalid_argument("Black-Scholes model only supports European options.");
+  }
   if (option.get_type() == pricing_engine::instruments::option_type::call) {
     return normal_cdf(calculate_d1(market_data.get_spot_price(), option.get_strike(), option.get_time_to_expiration(), market_data.get_volatility(), market_data.get_interest_rate()));
   } else {
@@ -42,16 +51,25 @@ double pricing_engine::models::BlackScholesModel::delta(const instruments::Optio
 }
 
 double pricing_engine::models::BlackScholesModel::gamma(const instruments::Option& option, const market_data::MarketData& market_data) const {
+  if (option.get_style() != pricing_engine::instruments::option_style::european) {
+    throw std::invalid_argument("Black-Scholes model only supports European options.");
+  }
   double d1 = calculate_d1(market_data.get_spot_price(), option.get_strike(), option.get_time_to_expiration(), market_data.get_volatility(), market_data.get_interest_rate());
   return normal_pdf(d1) / (market_data.get_spot_price() * market_data.get_volatility() * std::sqrt(option.get_time_to_expiration()));
 }
 
 double pricing_engine::models::BlackScholesModel::vega(const instruments::Option& option, const market_data::MarketData& market_data) const {
+  if (option.get_style() != pricing_engine::instruments::option_style::european) {
+    throw std::invalid_argument("Black-Scholes model only supports European options.");
+  }
   double d1 = calculate_d1(market_data.get_spot_price(), option.get_strike(), option.get_time_to_expiration(), market_data.get_volatility(), market_data.get_interest_rate());
   return market_data.get_spot_price() * normal_pdf(d1) * std::sqrt(option.get_time_to_expiration());
 }
 
 double pricing_engine::models::BlackScholesModel::theta(const instruments::Option& option, const market_data::MarketData& market_data) const {
+  if (option.get_style() != pricing_engine::instruments::option_style::european) {
+    throw std::invalid_argument("Black-Scholes model only supports European options.");
+  }
   double d1 = calculate_d1(market_data.get_spot_price(), option.get_strike(), option.get_time_to_expiration(), market_data.get_volatility(), market_data.get_interest_rate());
   double d2 = calculate_d2(d1, market_data.get_volatility(), option.get_time_to_expiration());
 
@@ -65,6 +83,9 @@ double pricing_engine::models::BlackScholesModel::theta(const instruments::Optio
 }
 
 double pricing_engine::models::BlackScholesModel::rho(const instruments::Option& option, const market_data::MarketData& market_data) const {
+  if (option.get_style() != pricing_engine::instruments::option_style::european) {
+    throw std::invalid_argument("Black-Scholes model only supports European options.");
+  }
   double d1 = calculate_d1(market_data.get_spot_price(), option.get_strike(), option.get_time_to_expiration(), market_data.get_volatility(), market_data.get_interest_rate());
   double d2 = calculate_d2(d1, market_data.get_volatility(), option.get_time_to_expiration());
 
