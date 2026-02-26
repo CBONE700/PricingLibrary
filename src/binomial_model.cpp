@@ -9,7 +9,7 @@ pricing_engine::models::BinomialModel::BinomialModel(int steps) {
   this->steps = steps;
 }
 
-double pricing_engine::models::BinomialModel::price(const pricing_engine::instruments::Option& option, const market_data::MarketData& market_data) const {
+double pricing_engine::models::BinomialModel::compute_price(const pricing_engine::instruments::Option& option, const market_data::MarketData& market_data) const {
   double dt = option.get_time_to_expiration() / steps;
   double u = std::exp(market_data.get_volatility() * std::sqrt(dt));
   double d = 1.0 / u;

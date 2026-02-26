@@ -6,6 +6,6 @@
 namespace pricing_engine::models {
   class FuturesModel {
   public:
-    double price(const instruments::Future& future, const market_data::MarketData& market_data);
+    double compute_price(const instruments::Future& future, const market_data::MarketData& market_data);
   };
 }

@@ -8,8 +8,6 @@ namespace pricing_engine::models {
   public:
     explicit BinomialModel(int steps);
 
-    double price(const pricing_engine::instruments::Option& option, const market_data::MarketData& market_data) const override;
-    int get_steps() const { return steps; }
-    void set_steps(int new_steps) { steps = new_steps; }
+    double compute_price(const pricing_engine::instruments::Option& option, const market_data::MarketData& market_data) const override;
   };
 }

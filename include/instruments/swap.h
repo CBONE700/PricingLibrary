@@ -18,11 +18,5 @@ namespace pricing_engine::instruments {
     double get_time_to_maturity() const { return time_to_maturity; }
     double get_notional_value() const { return notional_value; }
     periodicity get_periodicity() const { return period; }
-
-    void set_fixed_rate(double new_fixed_rate) { fixed_rate = new_fixed_rate; }
-    void set_floating_margin(double new_floating_margin) { floating_margin = new_floating_margin; }
-    void set_time_to_maturity(double new_time_to_maturity) { time_to_maturity = new_time_to_maturity; }
-    void set_notional_value(double new_notional_value) { notional_value = new_notional_value; }
-    void set_periodicity(periodicity new_periodicity) { period = new_periodicity; }
   };
 }

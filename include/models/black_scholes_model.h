@@ -11,12 +11,12 @@ namespace pricing_engine::models {
     double calculate_d2(double d1, double volatility, double time_to_expiration) const;
 
   public:
-    double price(const pricing_engine::instruments::Option& option, const pricing_engine::market_data::MarketData& market_data) const override;
+    double compute_price(const pricing_engine::instruments::Option& option, const pricing_engine::market_data::MarketData& market_data) const override;
 
-    double delta(const instruments::Option& option, const market_data::MarketData& market_data) const override;
-    double gamma(const instruments::Option& option, const market_data::MarketData& market_data) const override;
-    double vega(const instruments::Option& option, const market_data::MarketData& market_data) const override;
-    double theta(const instruments::Option& option, const market_data::MarketData& market_data) const override;
-    double rho(const instruments::Option& option, const market_data::MarketData& market_data) const override;
+    double compute_delta(const instruments::Option& option, const market_data::MarketData& market_data) const override;
+    double compute_gamma(const instruments::Option& option, const market_data::MarketData& market_data) const override;
+    double compute_vega(const instruments::Option& option, const market_data::MarketData& market_data) const override;
+    double compute_theta(const instruments::Option& option, const market_data::MarketData& market_data) const override;
+    double compute_rho(const instruments::Option& option, const market_data::MarketData& market_data) const override;
   };
 }

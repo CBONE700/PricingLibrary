@@ -2,7 +2,7 @@
 #include <cmath>
 #include <stdexcept>
 
-double pricing_engine::models::FuturesModel::price(const pricing_engine::instruments::Future& future, const pricing_engine::market_data::MarketData& market_data) {
+double pricing_engine::models::FuturesModel::compute_price(const pricing_engine::instruments::Future& future, const pricing_engine::market_data::MarketData& market_data) {
   double adjusted_spot = market_data.get_spot_price() - future.get_pv_income();
   if (adjusted_spot < 0) {
     throw std::invalid_argument("Adjusted spot price cannot be negative.");
