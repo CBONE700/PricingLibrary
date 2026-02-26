@@ -16,7 +16,7 @@ int main()
   pricing_engine::market_data::MarketData market_data = pricing_engine::market_data::MarketData(100, 0.05, 0.2);
   pricing_engine::models::BlackScholesModel bsm_engine;
   pricing_engine::models::BinomialModel binomial_engine(100);
-  pricing_engine::models::MonteCarloModel monte_carlo_engine(1000, 10000);
+  pricing_engine::models::MonteCarloModel monte_carlo_engine(10000, 1000);
   double bsm_price = bsm_engine.compute_price(option, market_data);
   double binomial_price = binomial_engine.compute_price(option, market_data);
   double monte_carlo_price = monte_carlo_engine.compute_price(option, market_data);

@@ -36,8 +36,9 @@ double pricing_engine::models::MonteCarloModel::compute_price(
       double lnSt1 = lnS;
       double lnSt2 = lnS;
         for (int i = 0; i < steps; ++i) {
-          lnSt1 += nudt + volsdt * distribution(local_rng);
-          lnSt2 += nudt + volsdt * distribution(local_rng);
+          double random_value = distribution(local_rng);
+          lnSt1 += nudt + volsdt * random_value;
+          lnSt2 += nudt - volsdt * random_value;
         }
         double St1 = std::exp(lnSt1);
         double St2 = std::exp(lnSt2);
@@ -59,5 +60,9 @@ double pricing_engine::models::MonteCarloModel::compute_price(
         sum_Ct2 += Ct * Ct;
     }
 
-    return std::exp(-market_data.get_interest_rate() * option.get_time_to_expiration()) * (sum_Ct / paths);
+    double C0 = std::exp(-market_data.get_interest_rate() * option.get_time_to_expiration()) * (sum_Ct / paths);
+    double sigma = std::sqrt((sum_Ct2 - sum_Ct*sum_Ct/paths) * std::exp(-2.0 * market_data.get_interest_rate() * option.get_time_to_expiration()) / (paths - 1));
+    double SE = sigma / std::sqrt(paths);
+
+    return C0;
 }
