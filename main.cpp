@@ -6,6 +6,8 @@
 #include "./include/market/market_data.h"
 #include "./include/instruments/futures.h"
 #include "./include/models/futures_model.h"
+#include "./include/models/swap_model.h"
+#include "./include/instruments/swap.h"
 using namespace std;
 
 int main()
@@ -17,9 +19,12 @@ int main()
   pricing_engine::models::BlackScholesModel bsm_engine;
   pricing_engine::models::BinomialModel binomial_engine(100);
   pricing_engine::models::MonteCarloModel monte_carlo_engine(10000, 1000);
+  pricing_engine::instruments::Swap swap = pricing_engine::instruments::Swap(0.05, 2, 1000000, pricing_engine::instruments::periodicity::annual, {0.04, 0.045});
   double bsm_price = bsm_engine.compute_price(option, market_data);
   double binomial_price = binomial_engine.compute_price(option, market_data);
   double monte_carlo_price = monte_carlo_engine.compute_price(option, market_data);
+  double swap_price = pricing_engine::models::SwapModel().compute_price(swap);
+  cout << "Swap price: " << swap_price << endl;
   cout << "Option price: " << bsm_price << endl;
   cout << "Binomial price: " << binomial_price << endl;
   cout << "Monte Carlo price: " << monte_carlo_price << endl;

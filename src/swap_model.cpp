@@ -1,25 +1,38 @@
 #include "../include/models/swap_model.h"
+#include "../include/instruments/swap.h"
 #include <cmath>
+#include <vector>
 
-double pricing_engine::models::SwapModel::price(
-    const instruments::Swap& swap,
-    const market_data::MarketData& market_data) {
+double pricing_engine::models::SwapModel::compute_price(
+    const pricing_engine::instruments::Swap& swap) {
 
-    double fixed_leg = 0.0;
-    double r = market_data.get_interest_rate();
-    double dt = 1.0 / static_cast<double>(swap.get_periodicity());
-    int n = swap.get_time_to_maturity() * static_cast<int>(swap.get_periodicity());
+    size_t periods_to_calculate = static_cast<size_t>(swap.get_spot_rates().size());
 
-    for (int i = 0; i < n; ++i) {
-        double t = (i + 1) * dt;
-        double discount = std::exp(-r * t);  // continuous discounting preferred
-        fixed_leg += swap.get_fixed_rate() * swap.get_notional_value() * dt * discount;
+    std::vector<double> forward_rates = std::vector<double>(periods_to_calculate);
+    forward_rates[0] = swap.get_spot_rates()[0];
+ 
+    for (size_t i = 1; i < periods_to_calculate; ++i) {
+        double numerator = pow((1.0 + swap.get_spot_rates()[i]), i + 1);
+        double denominator = pow((1.0 + swap.get_spot_rates()[i - 1]), i);
+        forward_rates[i] = numerator / denominator - 1.0;
     }
 
-    double maturity = swap.get_time_to_maturity();
-    double discount_T = std::exp(-r * maturity);
+    double floating_leg = 0.0;
+    double dt = 1.0 / static_cast<double>(swap.get_periodicity());
 
-    double floating_leg = swap.get_notional_value() * (1.0 - discount_T);
+    for (size_t i = 0; i < periods_to_calculate; ++i) {
+        double t = (i + 1)/static_cast<double>(swap.get_periodicity());
+        double discount = 1.0 / (pow(1.0 + swap.get_spot_rates()[i], t));
+        floating_leg += forward_rates[i] * swap.get_notional_value() * discount * dt;
+    }
+
+    double fixed_leg = 0.0;
+
+    for (size_t i = 0; i < periods_to_calculate; ++i) {
+        double t = (i + 1)/static_cast<double>(swap.get_periodicity());
+        double discount = 1.0 / pow(1.0 + swap.get_spot_rates()[i], t);
+        fixed_leg += swap.get_fixed_rate() * swap.get_notional_value() * discount * dt;
+    }
 
     return fixed_leg - floating_leg;
 }
